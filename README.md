@@ -8,6 +8,9 @@ $ npm install
 
 # serve with hot reload at localhost:3000
 $ npm run dev
+go to http://localhost:3000/  
+enter random username & pass
+
 
 # build for production and launch server
 $ npm run build

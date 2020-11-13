@@ -50,19 +50,27 @@
 </template>
 
 <script lang='ts'>
+import VueRouter, { Route } from 'vue-router'
+
+declare module 'vue/types/vue' {
+  interface Vue {
+    $router: VueRouter
+  }
+}
+
 export default {
     head: {
         title: 'Login Page'
     },
     data() {
       return {
-        formError: null,
-        formUsername: '',
-        formPassword: ''
+        formError:<string>'',
+        formUsername:<string>'',
+        formPassword:<string>''
       }
     },
     methods: {
-        clickLogin (e) {
+        clickLogin (e:any) {
           e.preventDefault();
             try {
                 if (this.formUsername === '' && this.formPassword === '') {
@@ -79,7 +87,7 @@ export default {
                    this.$router.push('/dashboard')
                 }                
             } catch (e) {
-                this.formError = e.message
+                this.formError = 'error'
             }
         }
     },

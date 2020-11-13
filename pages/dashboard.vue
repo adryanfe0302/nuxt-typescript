@@ -130,6 +130,8 @@
 interface Iitem {
   id: number;
   name: string;
+  overview?: string;
+  poster_path?: string;
 }
 
 interface Imovie {
@@ -147,12 +149,27 @@ interface Imovie {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  genres: Iitem[];
+  filter?: any;
+}
+
+interface Igenre {
+  genres: Iitem
 }
 
 import FilterGenre from '~/components/Filter.vue';
 import TableData from '~/components/Table.vue';
 import ModalMovie from '~/components/Modal.vue';
+import VueRouter, { Route } from 'vue-router'
+
+declare module 'vue/types/vue' {
+  interface Vue {
+    $router: VueRouter
+  }
+}
+
 export default {
+  
     head: {
         title: 'Dashboard'
     },
@@ -161,15 +178,16 @@ export default {
       TableData,
       ModalMovie
     },
+    
     data() {
       return {
-        name: '',
-        loading: true,
-        modal: false,
-        movie: [],
-        genre: [],
-        selectedGenre: 'Select Genre',
-        movieDetail: {
+        name: <string | null>'',
+        loading:<boolean> true,
+        modal: <boolean>false,
+        movie: <object>[],
+        genre: <object>[],
+        selectedGenre:<string>'Select Genre',
+        movieDetail:<any>{
           title: '',
           genre: '',
           date: '',
@@ -179,7 +197,7 @@ export default {
       }
     },
     methods: {
-      clickLogout(e) {
+      clickLogout(e:any) {
         e.preventDefault();
         window.sessionStorage.removeItem('email')
         window.sessionStorage.removeItem('statusLogin')
@@ -190,12 +208,11 @@ export default {
             'https://api.themoviedb.org/3/movie/top_rated?api_key=bf1b09065cc06d4ff6e4ede4601348ff&language=en-US&page=1'
           ).then(res => res.json())
           .then((res:any) => {
-             let listingMovie:Imovie = res.results
+             let listingMovie = res.results
              this.movie = listingMovie
           })  
       },
-      searchTitle(e:string) {
-        this.searchvalue = e.target.value
+      searchTitle(e:any) {
         if (e.target.value.length >= 3) {
             fetch(
             `https://api.themoviedb.org/3/search/movie?api_key=bf1b09065cc06d4ff6e4ede4601348ff&language=en-US&query=${e.target.value}&page=1&include_adult=false`
@@ -217,7 +234,7 @@ export default {
           fetch(
             `https://api.themoviedb.org/3/genre/movie/list?api_key=bf1b09065cc06d4ff6e4ede4601348ff&language=en-US`
           ).then(res => res.json())
-          .then((res:Iitem[]) => {
+          .then((res:any) => {
              this.genre = res.genres
              this.loading = false
           })  
@@ -228,7 +245,7 @@ export default {
           ).then(res => res.json())
           .then((res:any) => {
             let listingMovie:Imovie = res.results
-            this.movie = listingMovie.filter(list => {
+            this.movie = listingMovie.filter((list:Imovie) => {
               return list.genre_ids.includes(item.id) && list
             })
         }) 
@@ -248,6 +265,7 @@ export default {
             `https://api.themoviedb.org/3/movie/${item.id}?api_key=bf1b09065cc06d4ff6e4ede4601348ff&language=en-US`
           ).then(res => res.json())
           .then((res:Imovie) => {
+            console.log('res', res)
             this.movieDetail.title = res.title
             this.movieDetail.date = res.release_date
             this.movieDetail.overview = item.overview
