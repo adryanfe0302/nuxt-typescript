@@ -75,7 +75,6 @@ export default {
             try {
                 if (this.formUsername === '' && this.formPassword === '') {
                    this.formError = 'Masukkan password & email anda'
-
                 } else if (this.formUsername === '' && this.formPassword !== '') {
                    this.formError = 'Masukkan email anda'
                 } else if (this.formUsername !== '' && this.formPassword === '') {
