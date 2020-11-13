@@ -1,58 +1,60 @@
 <template>
-   <div class="flex flex-col">
+<div class="flex flex-col">
   <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
       <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
           <thead>
             <tr>
-              <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Name
+              <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-6 font-medium text-gray-500 uppercase tracking-wider">
+                Title <br />
+                <div class="inline-block relative w-64">
+                 <input @input="searchTitle" type="search" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline" placeholder="Search by name...">
+                 </div>
               </th>
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Title
+                Date 
               </th>
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Status
+                Rate
               </th>
               <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Role
+                ID
               </th>
-              <th class="px-6 py-3 bg-gray-50"></th>
+         
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr>
+     
+            <tr v-for="(item, index) in this.movie" :key="index" v-on:click="clickDetail(item)">
+            
               <td class="px-6 py-4 whitespace-no-wrap">
                 <div class="flex items-center">
                   <div class="flex-shrink-0 h-10 w-10">
-                    <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=4&amp;w=256&amp;h=256&amp;q=60" alt="">
+                    <img class="h-10 w-10 rounded-full" :src="'http://image.tmdb.org/t/p/w185' + item.poster_path" alt="">
                   </div>
                   <div class="ml-4">
                     <div class="text-sm leading-5 font-medium text-gray-900">
-                      Jane Cooper
+                       {{item.title}}
                     </div>
-                    <div class="text-sm leading-5 text-gray-500">
-                      jane.cooper@example.com
-                    </div>
+                   
                   </div>
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-no-wrap">
-                <div class="text-sm leading-5 text-gray-900">Regional Paradigm Technician</div>
-                <div class="text-sm leading-5 text-gray-500">Optimization</div>
+                <div class="text-sm leading-5 text-gray-900"> 
+                {{item.release_date}}</div>
+                
               </td>
               <td class="px-6 py-4 whitespace-no-wrap">
                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                  Active
+                 {{item.vote_average}}
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
-                Admin
+                 {{item.id}}
               </td>
-              <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
-                <a href="#" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-              </td>
+        
             </tr>
 
             <!-- More rows... -->
@@ -64,23 +66,27 @@
 </div>
 </template>
 
-<script>
+<script lang='ts'>
+interface Iitem {
+  id: number,
+  name: string
+}
 export default {
     head: {
-        title: 'Listing'
+        title: 'Table'
     },
+    props: ['movie'],
     data() {
       return {
-        listings: [],
       }
     },
     methods: {
-
+      searchTitle(e:string){
+        this.$emit('searchTitle', e)
+      },
+      clickDetail(item:Iitem){
+        this.$emit('clickDetail', item)
+      }
     }
 }
 </script>
-
-<style>
-
-
-</style>

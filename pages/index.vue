@@ -49,14 +49,13 @@
         </div>
 </template>
 
-<script>
+<script lang='ts'>
 export default {
     head: {
         title: 'Login Page'
     },
     data() {
       return {
-        mountains: [],
         formError: null,
         formUsername: '',
         formPassword: ''
@@ -64,10 +63,7 @@ export default {
     },
     methods: {
         clickLogin (e) {
-          e.preventDefault();  
-          this.mountains = fetch(
-            'https://api.themoviedb.org/3/movie/latest?api_key=bf1b09065cc06d4ff6e4ede4601348ff&language=en-US'
-            ).then(res => res.json())
+          e.preventDefault();
             try {
                 if (this.formUsername === '' && this.formPassword === '') {
                    this.formError = 'Masukkan password & email anda'

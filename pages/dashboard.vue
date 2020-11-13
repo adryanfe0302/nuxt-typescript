@@ -19,9 +19,11 @@
 
             Menu open: "hidden", Menu closed: "block"
           -->
+        
           <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
+
           <!-- Icon when menu is open. -->
           <!--
             Heroicon name: x
@@ -35,18 +37,28 @@
       </div>
       <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
         <div class="flex-shrink-0">
+          <nuxt-link to="/dashboard">
           <img class="block lg:hidden h-8 w-auto" src="https://tailwindui.com/img/logos/v1/workflow-mark-on-dark.svg" alt="Workflow logo">
           <img class="hidden lg:block h-8 w-auto" src="https://tailwindui.com/img/logos/v1/workflow-logo-on-dark.svg" alt="Workflow logo">
+         </nuxt-link>
         </div>
         <div class="hidden sm:block sm:ml-6">
           <div class="flex">
             <a href="#" class="px-3 py-2 rounded-md text-sm font-medium leading-5 text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">
             welcome {{this.name}}
             </a>
-           
           </div>
         </div>
+
+        <filter-genre
+          :selectedGenre="this.selectedGenre"
+          :genre="this.genre"
+          @clickGenre="this.clickGenre"
+          @resetGenre="this.resetGenre"
+        />
+      
       </div>
+
       <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
         <button class="p-1 border-2 border-transparent text-gray-400 rounded-full hover:text-white focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out" aria-label="Notifications" v-on:click="clickLogout">
           <!-- Logout -->
@@ -95,153 +107,68 @@
 
 
 <!-- body -->
-<div class="flex flex-col">
-  <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Title
-              </th>
-              <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Date
-              </th>
-              <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Rate
-              </th>
-              <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                ID
-              </th>
-         
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-     
-            <tr v-for="(item, index) in this.movie" :key="index" v-on:click="clickDetail(item)">
-            
-              <td class="px-6 py-4 whitespace-no-wrap">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 h-10 w-10">
-                    <img class="h-10 w-10 rounded-full" :src="'http://image.tmdb.org/t/p/w185' + item.poster_path" alt="">
-                  </div>
-                  <div class="ml-4">
-                    <div class="text-sm leading-5 font-medium text-gray-900">
-                       {{item.title}}
-                    </div>
-                   
-                  </div>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-no-wrap">
-                <div class="text-sm leading-5 text-gray-900"> 
-                {{item.release_date}}</div>
-                
-              </td>
-              <td class="px-6 py-4 whitespace-no-wrap">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                 {{item.vote_average}}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-500">
-                 {{item.id}}
-              </td>
-        
-            </tr>
-
-            <!-- More rows... -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
+<table-data
+  @searchTitle='this.searchTitle'
+  @clickDetail='this.clickDetail'
+  :movie='this.movie'
+/>
 
 
 <!-- modal -->
-<div v-show="this.modal" class="fixed z-10 inset-0 overflow-y-auto">
-  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-    <!--
-      Background overlay, show/hide based on modal state.
-
-      Entering: "ease-out duration-300"
-        From: "opacity-0"
-        To: "opacity-100"
-      Leaving: "ease-in duration-200"
-        From: "opacity-100"
-        To: "opacity-0"
-    -->
-    <div class="fixed inset-0 transition-opacity">
-      <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-    </div>
-
-    <!-- This element is to trick the browser into centering the modal contents. -->
-    <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
-    <!--
-      Modal panel, show/hide based on modal state.
-
-      Entering: "ease-out duration-300"
-        From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-        To: "opacity-100 translate-y-0 sm:scale-100"
-      Leaving: "ease-in duration-200"
-        From: "opacity-100 translate-y-0 sm:scale-100"
-        To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-    -->
-    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-      <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <div class="sm:flex sm:items-start">
-        
-
-          <img :src="movieDetail.img">
-          
-          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-              {{movieDetail.title}} <br />
-              <span class="text-sm leading-5 text-gray-700">
-               {{movieDetail.date}} 
-              </span> <br />
-              <span class="text-sm leading-5 text-gray-700">
-               {{movieDetail.genre}} 
-              </span>
-            </h3>
-            <div class="mt-2">
-              <p class="text-sm leading-5 text-gray-700">
-                {{movieDetail.overview}}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <span v-on:click="clickDetail" class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
-          <button type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5">
-            Close
-          </button>
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
+<modal-movie 
+  :modal="this.modal" 
+  :movieDetail="this.movieDetail"
+  @clickDetail="this.clickDetail"
+/>
 
 </div>
 </template>
 
-<script>
-// import Tables from "~components/tables";
+
+<script lang='ts'>
+
+interface Iitem {
+  id: number;
+  name: string;
+}
+
+interface Imovie {
+  adult: boolean;
+  backdrop_path:string;
+  genre_ids: number[];
+  id: number
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+}
+
+import FilterGenre from '~/components/Filter.vue';
+import TableData from '~/components/Table.vue';
+import ModalMovie from '~/components/Modal.vue';
 export default {
     head: {
         title: 'Dashboard'
     },
-    // components: {
-    //   Tables: ('~/components/Tables')
-    // }
+    components: {
+      FilterGenre,
+      TableData,
+      ModalMovie
+    },
     data() {
       return {
         name: '',
         loading: true,
         modal: false,
         movie: [],
+        genre: [],
+        selectedGenre: 'Select Genre',
         movieDetail: {
           title: '',
           genre: '',
@@ -262,13 +189,52 @@ export default {
         fetch(
             'https://api.themoviedb.org/3/movie/top_rated?api_key=bf1b09065cc06d4ff6e4ede4601348ff&language=en-US&page=1'
           ).then(res => res.json())
-          .then(res => {
-             console.log('rr' , res)
+          .then((res:any) => {
+             let listingMovie:Imovie = res.results
+             this.movie = listingMovie
+          })  
+      },
+      searchTitle(e:string) {
+        this.searchvalue = e.target.value
+        if (e.target.value.length >= 3) {
+            fetch(
+            `https://api.themoviedb.org/3/search/movie?api_key=bf1b09065cc06d4ff6e4ede4601348ff&language=en-US&query=${e.target.value}&page=1&include_adult=false`
+          ).then(res => res.json())
+          .then((res:any) => {
              this.movie = res.results
+             this.loading = false
+             this.selectedGenre = 'Select Genre'
+          })  
+        } else {
+          this.getMovie()
+        }
+      },
+      resetGenre() {
+       this.getMovie()
+       this.selectedGenre = 'Select Genre'
+      },
+      getGenre() {
+          fetch(
+            `https://api.themoviedb.org/3/genre/movie/list?api_key=bf1b09065cc06d4ff6e4ede4601348ff&language=en-US`
+          ).then(res => res.json())
+          .then((res:Iitem[]) => {
+             this.genre = res.genres
              this.loading = false
           })  
       },
-      clickDetail(item) {
+      async clickGenre(item:Iitem) {
+         fetch(
+            'https://api.themoviedb.org/3/movie/top_rated?api_key=bf1b09065cc06d4ff6e4ede4601348ff&language=en-US&page=1'
+          ).then(res => res.json())
+          .then((res:any) => {
+            let listingMovie:Imovie = res.results
+            this.movie = listingMovie.filter(list => {
+              return list.genre_ids.includes(item.id) && list
+            })
+        }) 
+        this.selectedGenre = item.name
+      },
+      clickDetail(item:Iitem) {
         if (this.modal) {
           this.modal = false
           this.movieDetail.title = ''
@@ -278,21 +244,16 @@ export default {
           this.movieDetail.img = ''
         } else {
           this.modal = true
-
           fetch(
             `https://api.themoviedb.org/3/movie/${item.id}?api_key=bf1b09065cc06d4ff6e4ede4601348ff&language=en-US`
           ).then(res => res.json())
-          .then(res => {
-            console.log('detail' , res)
+          .then((res:Imovie) => {
             this.movieDetail.title = res.title
             this.movieDetail.date = res.release_date
             this.movieDetail.overview = item.overview
             this.movieDetail.genre = res.genres.map(a => a.name).join(', ')
             this.movieDetail.img = 'http://image.tmdb.org/t/p/w185' + item.poster_path
-  
           })  
-
-          
         }
       }
     },
@@ -305,6 +266,7 @@ export default {
       if (window.sessionStorage.getItem('statusLogin') !== 'true') {
           this.$router.push('/')
       } else {
+          this.getGenre()
           this.getMovie()
           this.name = window.sessionStorage.getItem('email')
       }
@@ -326,4 +288,10 @@ export default {
     font-size: 30px;
     font-family: sans-serif;
   }
+  .dropdown:hover .dropdown-menu {
+  display: block;
+}
+.dd-inline{
+  display: inline-block;
+}
 </style>
